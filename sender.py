@@ -6,8 +6,8 @@ import time
 import os
 
 
-JANELA = 0
-TIMEOUT = 100
+JANELA = 3
+TIMEOUT = 0.2
 
 
 class Sender():
@@ -107,11 +107,12 @@ class Sender():
         fimt = time.time()  # fim da transmissão
         print("\n\n\n\n===========================================\n\n\n")
         print("Arquivo enviado com sucesso!")
-        print("Tamanho do arquivo: " + str(n * 196) + " B.")
+        print("Tamanho do arquivo: " + str(n * (BUFFER-4)) + " B.")
         print("Numero de pacotes enviados: " + str(n+1))
         print("Nome do arquivo: " + self.getFileName())
         print("Duração de envio: "+str(fimt - iniciot) + " segundos.")
         print("Numero total de timeouts: " + str(k-1))
+        print("Velocidade: "+str(n*((BUFFER-4)/1000000)/(fimt-iniciot)))
         file.close()
         # s.close()
 
@@ -134,7 +135,7 @@ class Sender():
 
 if __name__ == '__main__':
     # Definindo algumas constantes
-    BUFFER = 400
+    BUFFER = 2000
     SLEEP_TIME = 0.02
     IP = '127.0.0.1'
     PORT = 6061

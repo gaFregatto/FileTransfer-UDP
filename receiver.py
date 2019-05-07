@@ -5,7 +5,7 @@ import struct
 import time
 import os
 
-JANELA = 0
+JANELA = 3
 
 
 class Receiver():
@@ -52,7 +52,7 @@ class Receiver():
         print("Número de pacotes a serem recebidos: "+str(n))
         print("Nome do arquivo: "+fileName)
         print("addr: "+str(addr))
-        os.system("pause")
+        # os.system("pause")
 
         dataTemp = []
         # Armazena temporariamente os dados numa lista, quando confirmar o recebimento da janela
@@ -71,7 +71,7 @@ class Receiver():
             npackage = struct.unpack((">I").encode(), bytearray(b))[0]
             print("Numero do pacote: "+str(npackage) + " | I: " +
                   str(i) + " | Buffer data: "+str(len(data)))
-            os.system("pause")
+            # os.system("pause")
             # Verifica se é o pacote que deve ser recebido
             if(npackage == i and len(data) == BUFFER):
                 print("Recebido pacote numero: " + str(i))
@@ -129,7 +129,7 @@ class Receiver():
 
 if __name__ == '__main__':
     # Definindo algumas constantes
-    BUFFER = 400
+    BUFFER = 2000
     FIRST_BUFFER = 60
     IP = '127.0.0.1'
     PORT = 6061
