@@ -128,7 +128,12 @@ class Receiver():
 
 if __name__ == '__main__':
     # Definindo algumas constantes
+<<<<<<< HEAD
     
+=======
+    BUFFER = 2000
+    FIRST_BUFFER = 60
+>>>>>>> c53de236522af5b7bc43e4475d567c7c4b7f9be2
     IP = '127.0.0.1'
     PORT = 6061
 
