@@ -5,8 +5,9 @@ import struct
 import time
 import os
 
-JANELA = 0
-
+JANELA = 3
+BUFFER = 2000
+FIRST_BUFFER = 60
 
 class Receiver():
     def __init__(self, root, ip, port, buffer):
@@ -35,15 +36,12 @@ class Receiver():
     def receiveFile(self):
         s = socket(AF_INET, SOCK_DGRAM)
         s.bind(('', self.port))
-        # s.listen(1)
-        #client, client_address = s.accept()
-        #print("%s:%s conectado." % client_address)
-
+        print("AGUARDANDO INICIO DO RECEBIMENTO")
         # tempo em que recebe primeiro pacote
         # com o número de pacotes totais e o nome do arquivo
         data, addr = s.recvfrom(FIRST_BUFFER)
         iniciot = time.time()
-
+        print("PRIMEIRO PACOTE RECEBIDO")
         # Pegando o número de pacotes
         b = data[0:4]
         n = struct.unpack((">I").encode(), bytearray(b))[0]
@@ -52,7 +50,7 @@ class Receiver():
         print("Número de pacotes a serem recebidos: "+str(n))
         print("Nome do arquivo: "+fileName)
         print("addr: "+str(addr))
-        os.system("pause")
+        # os.system("pause")
 
         dataTemp = []
         # Armazena temporariamente os dados numa lista, quando confirmar o recebimento da janela
@@ -64,14 +62,14 @@ class Receiver():
         i = 0
         while(i in range(n+1)):
             data = s.recv(BUFFER)
-            print("data >> "+str(data))
+            # print("data >> "+str(data))
             b = data[0:4]
 
             # Transforma os 4 primeiros bytes do pacote em inteiro
             npackage = struct.unpack((">I").encode(), bytearray(b))[0]
             print("Numero do pacote: "+str(npackage) + " | I: " +
                   str(i) + " | Buffer data: "+str(len(data)))
-            os.system("pause")
+            # os.system("pause")
             # Verifica se é o pacote que deve ser recebido
             if(npackage == i and len(data) == BUFFER):
                 print("Recebido pacote numero: " + str(i))
@@ -98,8 +96,9 @@ class Receiver():
 
                 for d in dataTemp:  # Transferindo os dados da lista temporaria para a lista definitiva
                     dataWrite.append(d)
-
+                    # print(">>>PASSANDO PARA DATAWRITE")
                 dataTemp.clear()
+
             i = i + 1
             j = j + 1
 
@@ -111,12 +110,12 @@ class Receiver():
         # Geracao de relatorios
         print("\n\n\n\n\n===========================================\n")
         print("Arquivo recebido com sucesso!")
-        print("Tamanho do arquivo: " + str(n * 196) + " B")
+        print("Tamanho do arquivo: " + str(n * BUFFER - 4) + " B")
         print("Numero de pacotes recebidos: " + str(n+1))
         print("Nome do arquivo: " + fileName)
         print("Duração do recebimento: "+str(fimt - iniciot) + " segundos.")
         print("Gravando em " + self.dir + "/" + fileName)
-
+        # print("")
         file = open(self.dir+'/'+fileName, "wb")
         finalData = bytes(0)
         for i in range(len(dataWrite)):
@@ -129,8 +128,7 @@ class Receiver():
 
 if __name__ == '__main__':
     # Definindo algumas constantes
-    BUFFER = 400
-    FIRST_BUFFER = 60
+    
     IP = '127.0.0.1'
     PORT = 6061
 

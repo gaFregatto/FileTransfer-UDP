@@ -6,9 +6,10 @@ import time
 import os
 
 
-JANELA = 0
+JANELA = 3
 TIMEOUT = 100
-
+BUFFER = 200
+SLEEP_TIME = 0.02
 
 class Sender():
     def __init__(self, root, ip, port, buffer, sleep, bufferConfirm):
@@ -134,8 +135,7 @@ class Sender():
 
 if __name__ == '__main__':
     # Definindo algumas constantes
-    BUFFER = 400
-    SLEEP_TIME = 0.02
+    
     IP = '127.0.0.1'
     PORT = 6061
 
