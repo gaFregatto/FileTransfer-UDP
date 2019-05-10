@@ -68,7 +68,6 @@ class Sender():
             npackage = i.to_bytes(4, 'big')
             package = npackage + self.partOfData(data, i)
             s.sendto(package, (self.ip, self.port))
-            print("Enviado pacote numero: "+str(i)+" || "+str(package))
 
             # Controle de janela de transmissao
             if j == JANELA:
@@ -76,28 +75,22 @@ class Sender():
 
                 try:
                     response = s.recv(self.buffer).decode()
-                    # print(">>"+response)
                     if(response.find('erro') == 0 and response.find('confirmado') < 0):
-                        print("Erro na transmissao, tentando enviar novamente..")
+                        # print("Erro na transmissao, tentando enviar novamente..")
                         i = i - JANELA - 1
                         j = - 1
-                        print("I depois da notificação de erro: "+str(i))
-                        # os.system("pause")
+                        # print("I depois da notificação de erro: "+str(i))
                     elif(response.find('confirmado') == 0):
-                        print("Confirmacao recebida, continuando transmissao..")
+                        # print("Confirmacao recebida, continuando transmissao..")
                     response = '\0'
                     # Aguarda 2ms o recebimento da confirmacao, caso contrario, lanca o timeout
 
                 except TimeoutError:
-                    print("Timeout numero " + str(k))
                     if(k < 3):
-                        print("Tentando retransmissão")
                         i = i - JANELA - 1
                         j = -1
                         k = k + 1
                     else:
-                        print(
-                            "Timeouts excessivos, melhore sua conexão e tente novamente.")
                         break
                 except:
                     print("Houve algum erro desconhecido.")

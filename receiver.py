@@ -5,8 +5,8 @@ import struct
 import time
 import os
 
-JANELA = 3
-BUFFER = 2000
+JANELA = 5
+BUFFER = 1000
 FIRST_BUFFER = 60
 
 class Receiver():
@@ -41,7 +41,6 @@ class Receiver():
         # com o número de pacotes totais e o nome do arquivo
         data, addr = s.recvfrom(FIRST_BUFFER)
         iniciot = time.time()
-        print("PRIMEIRO PACOTE RECEBIDO")
         # Pegando o número de pacotes
         b = data[0:4]
         n = struct.unpack((">I").encode(), bytearray(b))[0]
@@ -62,41 +61,30 @@ class Receiver():
         i = 0
         while(i in range(n+1)):
             data = s.recv(BUFFER)
-            # print("data >> "+str(data))
             b = data[0:4]
 
             # Transforma os 4 primeiros bytes do pacote em inteiro
             npackage = struct.unpack((">I").encode(), bytearray(b))[0]
-            print("Numero do pacote: "+str(npackage) + " | I: " +
-                  str(i) + " | Buffer data: "+str(len(data)))
-            # os.system("pause")
             # Verifica se é o pacote que deve ser recebido
             if(npackage == i and len(data) == BUFFER):
-                print("Recebido pacote numero: " + str(i))
                 data_arq = data[4:len(data)]
                 dataTemp.append(data_arq)
             elif(len(data) != BUFFER and npackage == n):
-                print("Recebido ultimo pacote: " + str(i))
                 data_arq = data[4:len(data)]
                 dataTemp.append(data_arq)
             else:
                 i = aux_i
                 j = -1
                 dataTemp.clear()
-                print("I depois da notificação: "+str(i))
                 s.sendto(("erro").encode(), addr)
-                print("Erro notificado")
 
             if j == JANELA:
                 j = -1
                 aux_i = i
-                print("Enviando confirmacao de recebimento")
                 s.sendto(("confirmado").encode(), addr)
-                print("Confirmacao enviada")
 
                 for d in dataTemp:  # Transferindo os dados da lista temporaria para a lista definitiva
                     dataWrite.append(d)
-                    # print(">>>PASSANDO PARA DATAWRITE")
                 dataTemp.clear()
 
             i = i + 1
@@ -128,12 +116,7 @@ class Receiver():
 
 if __name__ == '__main__':
     # Definindo algumas constantes
-<<<<<<< HEAD
-    
-=======
-    BUFFER = 2000
     FIRST_BUFFER = 60
->>>>>>> c53de236522af5b7bc43e4475d567c7c4b7f9be2
     IP = '127.0.0.1'
     PORT = 6061
 
